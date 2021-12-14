@@ -7,7 +7,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       KeyName: test-cloudformation-ec2
-      ImageId: ami-09d4b65ff082c3c6a
+      ImageId: ami-0218d08a1f9dac831
       InstanceType: t2.micro
       Monitoring: false
       NetworkInterfaces:
