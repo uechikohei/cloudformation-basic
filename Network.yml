@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  MyVPC2:
+    Type: AWS::EC2::VPC
+    Properties:
+      #数は、2048個
+      #範囲は、10.0.8.0 - 10.0.15.255
+      CidrBlock: 10.0.8.0/21
+      Tags:
+        - Key: Name
+          Value: MyVPC2fromCF
+
+  Subnet1Name:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId: !Ref MyVPC2
+      #数は、256個
+      #範囲は、10.0.8.0 - 10.0.8.255
+      CidrBlock: 10.0.8.0/24
+      Tags:
+        - Key: Name
+          Value: subnet1fromCF
+
+  testIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: IGWfromCF
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC2
+      InternetGatewayId: !Ref testIGW
+
+  PublicRoute:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVPC2
+      Tags:
+        - Key: Name
+          Value: RouteTablefromCF
+
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRoute
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref testIGW
+
+  Subnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet1Name
+      RouteTableId: !Ref PublicRoute
+
+Outputs:
+  VPC:
+    Value: !Ref MyVPC2
+    Export:
+      Name: MyVPC2
+  Subnet1:
+    Value: !Ref Subnet1Name
+    Export:
+      Name: Subnet1Name

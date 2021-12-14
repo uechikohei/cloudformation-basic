@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: TestCloudFormation
+
+Parameters:
+
+Resources:
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: test-cloudformation-ec2
+      ImageId: ami-09d4b65ff082c3c6a
+      InstanceType: t2.micro
+      Monitoring: false
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          SubnetId: !ImportValue Subnet1Name
+          GroupSet:
+            - !ImportValue SG1Name
+      Tags:
+        - Key: Name
+          Value: CFec2
