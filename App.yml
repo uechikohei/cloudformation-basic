@@ -2,8 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Description: TestCloudFormation
 
-Parameters:
-
 Resources:
   myEC2Instance:
     Type: AWS::EC2::Instance
